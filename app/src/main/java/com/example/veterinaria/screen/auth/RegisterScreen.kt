@@ -68,8 +68,8 @@ fun RegisterScreen(
         TopAppBar(
             title = { Text("Registro") },
             navigationIcon = {
-                IconButton(onClick = onNavigateToLogin) {
-                    Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
+                    IconButton(onClick = onNavigateToLogin) {
+                    Icon(Icons.Filled.ArrowBack, contentDescription = "Volver")
                 }
             }
         )

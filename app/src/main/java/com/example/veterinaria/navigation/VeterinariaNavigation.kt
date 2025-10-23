@@ -18,6 +18,9 @@ import com.example.veterinaria.screen.cliente.ClienteCreateEditScreen
 import com.example.veterinaria.screen.mascota.MascotasScreen
 import com.example.veterinaria.screen.mascota.MascotaDetailScreen
 import com.example.veterinaria.screen.mascota.MascotaCreateEditScreen
+import com.example.veterinaria.viewmodel.MascotaViewModel
+import com.example.veterinaria.viewmodel.ClienteViewModel
+import com.example.veterinaria.viewmodel.CitaViewModel
 import com.example.veterinaria.screen.cita.CitasScreen
 import com.example.veterinaria.screen.cita.CitaDetailScreen
 import com.example.veterinaria.screen.cita.CitaCreateEditScreen
@@ -26,7 +29,10 @@ import com.example.veterinaria.util.Constants.Navigation
 @Composable
 fun VeterinariaNavigation(
     navController: NavHostController,
-    authRepository: AuthRepository
+    authRepository: AuthRepository,
+    mascotaViewModel: MascotaViewModel,
+    clienteViewModel: ClienteViewModel,
+    citaViewModel: CitaViewModel
 ) {
     val isLoggedIn by authRepository.isLoggedIn.collectAsState(initial = false)
     
@@ -84,6 +90,7 @@ fun VeterinariaNavigation(
         // Clientes
         composable(Navigation.CLIENTES_ROUTE) {
             ClientesScreen(
+                clienteViewModel = clienteViewModel,
                 onNavigateBack = { navController.popBackStack() },
                 onNavigateToDetail = { clienteId ->
                     navController.navigate("clientes/$clienteId")
@@ -103,6 +110,7 @@ fun VeterinariaNavigation(
         ) { backStackEntry ->
             val clienteId = backStackEntry.arguments?.getLong("clienteId") ?: 0L
             ClienteDetailScreen(
+                clienteViewModel = clienteViewModel,
                 clienteId = clienteId,
                 onNavigateBack = { navController.popBackStack() },
                 onNavigateToEdit = { id ->
@@ -116,6 +124,7 @@ fun VeterinariaNavigation(
         
         composable(Navigation.CLIENTES_CREATE_ROUTE) {
             ClienteCreateEditScreen(
+                clienteViewModel = clienteViewModel,
                 clienteId = null,
                 onNavigateBack = { navController.popBackStack() },
                 onSaveSuccess = { navController.popBackStack() }
@@ -128,6 +137,7 @@ fun VeterinariaNavigation(
         ) { backStackEntry ->
             val clienteId = backStackEntry.arguments?.getLong("clienteId") ?: 0L
             ClienteCreateEditScreen(
+                clienteViewModel = clienteViewModel,
                 clienteId = clienteId,
                 onNavigateBack = { navController.popBackStack() },
                 onSaveSuccess = { navController.popBackStack() }
@@ -137,6 +147,7 @@ fun VeterinariaNavigation(
         // Mascotas
         composable(Navigation.MASCOTAS_ROUTE) {
             MascotasScreen(
+                mascotaViewModel = mascotaViewModel,
                 onNavigateBack = { navController.popBackStack() },
                 onNavigateToDetail = { mascotaId ->
                     navController.navigate("mascotas/$mascotaId")
@@ -156,6 +167,7 @@ fun VeterinariaNavigation(
         ) { backStackEntry ->
             val mascotaId = backStackEntry.arguments?.getLong("mascotaId") ?: 0L
             MascotaDetailScreen(
+                mascotaViewModel = mascotaViewModel,
                 mascotaId = mascotaId,
                 onNavigateBack = { navController.popBackStack() },
                 onNavigateToEdit = { id ->
@@ -169,9 +181,11 @@ fun VeterinariaNavigation(
         
         composable(Navigation.MASCOTAS_CREATE_ROUTE) {
             MascotaCreateEditScreen(
+                mascotaViewModel = mascotaViewModel,
                 mascotaId = null,
                 onNavigateBack = { navController.popBackStack() },
-                onSaveSuccess = { navController.popBackStack() }
+                onSaveSuccess = { navController.popBackStack() },
+                onNavigateToLogin = { navController.navigate(Navigation.LOGIN_ROUTE) }
             )
         }
         
@@ -181,15 +195,18 @@ fun VeterinariaNavigation(
         ) { backStackEntry ->
             val mascotaId = backStackEntry.arguments?.getLong("mascotaId") ?: 0L
             MascotaCreateEditScreen(
+                mascotaViewModel = mascotaViewModel,
                 mascotaId = mascotaId,
                 onNavigateBack = { navController.popBackStack() },
-                onSaveSuccess = { navController.popBackStack() }
+                onSaveSuccess = { navController.popBackStack() },
+                onNavigateToLogin = { navController.navigate(Navigation.LOGIN_ROUTE) }
             )
         }
         
         // Citas
         composable(Navigation.CITAS_ROUTE) {
             CitasScreen(
+                citaViewModel = citaViewModel,
                 onNavigateBack = { navController.popBackStack() },
                 onNavigateToDetail = { citaId ->
                     navController.navigate("citas/$citaId")
@@ -209,6 +226,7 @@ fun VeterinariaNavigation(
         ) { backStackEntry ->
             val citaId = backStackEntry.arguments?.getLong("citaId") ?: 0L
             CitaDetailScreen(
+                citaViewModel = citaViewModel,
                 citaId = citaId,
                 onNavigateBack = { navController.popBackStack() },
                 onNavigateToEdit = { id ->
@@ -219,9 +237,12 @@ fun VeterinariaNavigation(
         
         composable(Navigation.CITAS_CREATE_ROUTE) {
             CitaCreateEditScreen(
+                citaViewModel = citaViewModel,
+                mascotaViewModel = mascotaViewModel,
                 citaId = null,
                 onNavigateBack = { navController.popBackStack() },
-                onSaveSuccess = { navController.popBackStack() }
+                onSaveSuccess = { navController.popBackStack() },
+                onNavigateToLogin = { navController.navigate(Navigation.LOGIN_ROUTE) }
             )
         }
         
@@ -231,9 +252,12 @@ fun VeterinariaNavigation(
         ) { backStackEntry ->
             val citaId = backStackEntry.arguments?.getLong("citaId") ?: 0L
             CitaCreateEditScreen(
+                citaViewModel = citaViewModel,
+                mascotaViewModel = mascotaViewModel,
                 citaId = citaId,
                 onNavigateBack = { navController.popBackStack() },
-                onSaveSuccess = { navController.popBackStack() }
+                onSaveSuccess = { navController.popBackStack() },
+                onNavigateToLogin = { navController.navigate(Navigation.LOGIN_ROUTE) }
             )
         }
     }

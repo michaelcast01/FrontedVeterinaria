@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.first
 
 class MascotaViewModel(
     private val mascotaRepository: MascotaRepository,
@@ -175,6 +176,11 @@ class MascotaViewModel(
             _isLoading.value = true
             
             val form = _mascotaForm.value
+            // Si no se asignó clienteId en el formulario, intentar obtener el id del usuario logeado
+            val clienteIdToUse = if (form.clienteId == 0L) {
+                val user = try { authRepository.currentUser.first() } catch (e: Exception) { null }
+                user?.id ?: 0L
+            } else form.clienteId
             val mascotaDto = MascotaDTO(
                 id = mascotaId,
                 nombre = form.nombre,
@@ -185,7 +191,7 @@ class MascotaViewModel(
                 peso = form.peso.toDoubleOrNull(),
                 color = form.color.ifEmpty { null },
                 observaciones = form.observaciones.ifEmpty { null },
-                clienteId = form.clienteId,
+                clienteId = clienteIdToUse,
                 activo = form.activo
             )
             
